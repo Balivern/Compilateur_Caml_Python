@@ -24,6 +24,11 @@ let rec tp_expr env = function
     | IfThenElse (cond, e1, e2) -> if tp_expr env cond = BoolT && tp_expr env e1 = tp_expr env e2 then tp_expr env e1 else failwith "condition mal formée"
     | CallE es -> failwith "a completer" (* filtrage pour déterminer le type d'une fonction *)(*(let ts = List.map (tp_expr env) es in function_type_correct (List.hd ts) (List.lf ts) IfThenElse cond e1 e2)*)
     | _ -> failwith "a completer" ;;
+    | CallE es -> funCallE env [] es;;
+
+let rec funCallE env list_res es = match es with
+        | [] -> list_res
+        | (a::l) -> funCallE env (list_res@[(tp_expr env a)]) l;;
 
 (* TODO: implement *)
 let tp_prog (Prog (fdfs, e)) = IntT
