@@ -38,6 +38,11 @@ let rec tp_expr env = function
                             in tp_application ft argst
     | CallE (_) -> failwith "tp_expr: internal error: empty fun-args list in CallE" (* filtrage pour déterminer le type d'une fonction *)(*(let ts = List.map (tp_expr env) es in function_type_correct (List.hd ts) (List.lf ts) IfThenElse cond e1 e2)*)
     | _ -> failwith "a completer" ;;
+    | CallE es -> funCallE env [] es;;
+
+let rec funCallE env list_res es = match es with
+        | [] -> list_res
+        | (a::l) -> funCallE env (list_res@[(tp_expr env a)]) l;;
 
 (* TODO: implement *)
 let tp_prog (Prog (fdfs, e)) = IntT ;;
