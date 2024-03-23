@@ -9,7 +9,6 @@ let doc_of_const = function
     BoolV true -> string "True"
   | BoolV false -> string "False"
   | IntV i -> PPrint.OCaml.int i
-  | _ -> empty
     
 let doc_of_var v = string v
 

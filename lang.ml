@@ -18,10 +18,10 @@ type binop =
 type value =
     BoolV of bool
   | IntV of int
-  | UndefV (* TODO: really keep? *)
+  (*| UndefV  TODO: really keep? *)
     
 (* expresssions *)
-type expr = 
+type expr =
     Const of value                     (* constant *)
   | VarE  of vname                     (* variable *)
   | BinOp of binop * expr * expr       (* binary operation *)
