@@ -16,12 +16,10 @@ let rec tp_var_local_var env var = try List.assoc var env.localvar with _ -> fai
 
 let rec tp_var_funbind env var = try List.assoc var env.funbind with _ -> failwith "erreur" ;;
     
-let rec tp_var env var = try tp_var_local_var env var 
-                            with _ -> (try (match tp_var_funbind env var with |FPdecl(t, _, _) -> t)
-                                            with _ -> failwith "tp_var: internal error: var not found in env");;
+let rec tp_var env var =    try tp_var_local_var env var 
+                            with _ -> ( try (match tp_var_funbind env var with |FPdecl(t, _, _) -> t)
+                                        with _ -> failwith "tp_var: internal error: var not found in env");;
 
-(* type fpdecl = FPdecl of tp * vname * (vardecl list)      |            type tp = BoolT | IntT | FunT of tp * tp   *)
-    
 (*    match tp_var_local_var env var with 
                             | None -> (match tp_var_funbind env var with 
                                 | None -> failwith "tp_var: internal error: var not found in env"
@@ -53,11 +51,3 @@ let rec tp_expr env = function
 
 (* TODO: implement *)
 let tp_prog (Prog (fdfs, e)) = IntT ;;
-
-(* Test de récursivité termninale 
-let rec is_tailrec_expr func_name expr = match expr with
-                            | CallE (f, _) -> f = func_name (* Vérifie si l'appel est à la fonction elle-même *)
-                            | BinOp (_, e1, e2) -> is_tailrec_expr func_name e1 && is_tailrec_expr func_name e2
-                            | IfThenElse (_, e1, e2) -> is_tailrec_expr func_name e1 && is_tailrec_expr func_name e2
-                            | _ -> false ;;*)
-
