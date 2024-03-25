@@ -18,7 +18,7 @@ let rec containsRecursiveCall func_name e = match e with
                                               | _ -> containsRecursiveCall func_name exp)
                             | IfThenElse (cond, thenBranch, elseBranch) -> containsRecursiveCall func_name cond || containsRecursiveCall func_name thenBranch || containsRecursiveCall func_name elseBranch
                             | BinOp (_, e1, e2) -> containsRecursiveCall func_name e1 || containsRecursiveCall func_name e2
-                            | _ -> false
+                            | _ -> false ;;
 
 (* Test de récursivité termninale *)
 let rec is_tailrec_expr func_name expr = match expr with
@@ -35,5 +35,5 @@ let rec transf_expr func_name params expr =   if is_tailrec_expr func_name expr
                                                     | CallE (f :: args) when f = VarE func_name ->  let assignments = List.map2 (fun param arg -> (param, arg)) params args
                                                                                                     in Assign(assignments, Skip)
                                                     | _ -> Skip
-                                              else expr
-                            
+                                              else expr ;;
+                                              
