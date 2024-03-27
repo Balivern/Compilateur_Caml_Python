@@ -7,15 +7,9 @@ let run infile =
   let trp = Transf.transf_prog p in
   Pprinter.print_prog trp
 
-let main () = 
-  print_string "bonjour\n"
-;;
-
-(* TODO: replace by the following once fct. run is implemented:
 let main () =
   run Sys.argv.(1) 
 ;;
-*)
     
 main();;
 

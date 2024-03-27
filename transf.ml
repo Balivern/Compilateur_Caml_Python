@@ -12,28 +12,25 @@ let rec names_expr = StringSet.empty
 let transf_prog (Prog(fdfs, e)) = Prog(fdfs, e)
 
 (* Fonction vérifiant si une expression contient un appel récursif sur func_name *)
-let rec containsRecursiveCall func_name e = match e with
-                            | CallE (exp :: _) -> (match exp with 
-                                               Const exp -> not (exp = func_name)
-                                              | _ -> containsRecursiveCall func_name exp)
-                            | IfThenElse (cond, thenBranch, elseBranch) -> containsRecursiveCall func_name cond || containsRecursiveCall func_name thenBranch || containsRecursiveCall func_name elseBranch
-                            | BinOp (_, e1, e2) -> containsRecursiveCall func_name e1 || containsRecursiveCall func_name e2
-                            | _ -> false ;;
+let rec containsRecursiveCall = fun
+                                VarE e -> StringSet.singleton e
+                                | BinOp (_,e1,e2) -> StringSet.union (containsRecursiveCall e1) (containsRecursiveCall e2)
+                                | IfThenElse(cond,thenBranch,elseBranch) -> StringSet.union (containsRecursiveCall cond) (StringSet.union (containsRecursiveCall thenBranch) (containsRecursiveCall elseBranch))
+                                | CallE(f::args) -> List.fold_left (fun acc a -> StringSet.union acc (containsRecursiveCall a)) (containsRecursiveCall f) args
+                                | _ -> StringSet.empty ;;
 
 (* Test de récursivité termninale *)
 let rec is_tailrec_expr func_name expr = match expr with
-                            | CallE (liste) -> List.for_all (fun e -> not (containsRecursiveCall func_name e)) liste (* Vérifie que les expression ne contiennent pas la fonction func_name *)
-                            | IfThenElse (cond, thenBranch, elseBranch) -> not (containsRecursiveCall func_name cond) && is_tailrec_expr func_name thenBranch && is_tailrec_expr func_name elseBranch
-                            | BinOp (_, e1, e2) -> is_tailrec_expr func_name e1 && is_tailrec_expr func_name e2
-                            | Const exp -> not (exp = func_name)
-                            | _ -> true ;;
+                            CallE (f::args) -> (List.for_all (fun e -> not (StringSet.mem func_name (containsRecursiveCall e))) args) (* Vérifie que les expression ne contiennent pas la fonction func_name *)
+                            | IfThenElse (cond, thenBranch, elseBranch) -> not (containsRecursiveCall cond) && is_tailrec_expr func_name thenBranch && is_tailrec_expr func_name elseBranch
+                            | e -> not (StringSet.mem func_name (containsRecursiveCall e))
 
 (* Fonction pour transformer une expression récursive terminale *)
-let rec transf_expr func_name params expr =   if is_tailrec_expr func_name expr 
-                                              then match expr with
-                                                    | IfThenElse (cond, thenBranch, elseBranch) -> Cond(cond, transf_expr func_name params thenBranch, transf_expr func_name params elseBranch)
-                                                    | CallE (f :: args) when f = VarE func_name ->  let assignments = List.map2 (fun param arg -> (param, arg)) params args
-                                                                                                    in Assign(assignments, Skip)
-                                                    | _ -> Skip
-                                              else expr ;;
+let transf_expr func_name params expr =   if is_tailrec_expr func_name expr
+                                          then (let rec aux = fun
+                                                IfThenElse (cond, thenBranch, elseBranch) -> Cond(cond, aux thenBranch, aux elseBranch)
+                                                | CallE (f :: args) -> Assign(params, args)
+                                                | e -> Return e 
+                                              in While(Const(BoolV true),(aux expr)))
+                                          else Return expr ;;
                                               
