@@ -1,9 +1,11 @@
 Projet Récursion et Itération
 
 
+
 Projet réalisé par Lola Condom, Maxime Rieux, Renan Cabane.
 
 Répartition du travail :
+
 
 Lola :
 
@@ -31,12 +33,14 @@ Maxime + Renan :
 •	Fichier typing.ml : 
 -	tp_funbind
 -	tp_prog
+
 •	Fichier transf.ml :
 -	containsRecursiveCall
 -	is_tailrec_expr
 -	transf_expr
  
 Problèmes rencontrés :
+
 
 •	Peu d’expérience pratique de programmation en Caml : impliquant une faible connaissance des fonctions (notamment celles du module List) de Caml.
 
