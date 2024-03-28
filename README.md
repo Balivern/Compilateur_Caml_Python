@@ -12,25 +12,25 @@ Lola :
 
 Maxime :
 •	Fichier typing.ml : 
--	tp_application
--	trouver (fonction auxiliaire de la fonction tp_var_funbind)
--	tp_expr (cas BinOp)
+  -	tp_application
+  -	trouver (fonction auxiliaire de la fonction tp_var_funbind)
+  -	tp_expr (cas BinOp)
 
 Renan :
 •	Fichier typing.ml : 
--	tp_var_local_var
--	tp_var_funbind 
--	tp_var
--	tp_expr (cas Const, VarE, IfThenElse, CallE, _)
+  -	tp_var_local_var
+  -	tp_var_funbind
+  -	tp_var
+  -	tp_expr (cas Const, VarE, IfThenElse, CallE, _)
 
 Maxime + Renan :
 •	Fichier typing.ml : 
--	tp_funbind
--	tp_prog
+  - tp_funbind
+  - tp_prog
 •	Fichier transf.ml :
--	containsRecursiveCall
--	is_tailrec_expr
--	transf_expr
+  - containsRecursiveCall
+  - is_tailrec_expr
+  - transf_expr
 
  
 Problèmes rencontrés :
